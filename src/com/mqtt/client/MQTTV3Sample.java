@@ -59,7 +59,7 @@ public class MQTTV3Sample implements MqttCallback {
 		String topic = "LocalizacionMonitor";
 		String message = "1080056328+3.597984985345394-74.08372812092387";
 		int qos = 2;
-		String broker = "ec2-52-207-244-2.compute-1.amazonaws.com";
+		String broker = "ec2-52-87-193-30.compute-1.amazonaws.com";
 		int port = 1885;
 		int NUMBER_USERS = 10;
 		
