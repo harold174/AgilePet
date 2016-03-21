@@ -1,4 +1,4 @@
-package localization;
+package com.agilepet.localization;
 /**
  * 
  * @author harold
