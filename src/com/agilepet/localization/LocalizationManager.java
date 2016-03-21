@@ -52,7 +52,7 @@ public class LocalizationManager {
 
 	private void encolarEvento()
 	{
-
+		
 	}
 
 }
