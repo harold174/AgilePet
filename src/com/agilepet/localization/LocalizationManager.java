@@ -30,8 +30,7 @@ public class LocalizationManager {
 		//Persistir info
 		persistirInfo(message);
 		//Priorizar evento
-		//Atender evento si es prioritario
-		//Encolar evento si no es prioritario
+	
 		priorizarEvento(message);
 	}
 
@@ -47,7 +46,8 @@ public class LocalizationManager {
 
 	private void atenderEvento()
 	{
-
+		//Atender evento si es prioritario - Enviar correo
+		//Encolar evento si no es prioritario
 	}
 
 	private void encolarEvento()
