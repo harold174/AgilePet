@@ -1,4 +1,7 @@
 package com.agilepet.localization;
+
+import com.agilepet.utils.MailManager;
+
 /**
  * 
  * @author harold
@@ -36,23 +39,28 @@ public class LocalizationManager {
 
 	private void persistirInfo(String message)
 	{
+		//TODO save message on BD
 
 	}
 
 	private void priorizarEvento(String message)
 	{
-
+		//Revisar si el perro esta perdido
+		//Atender evento si es prioritario 
+		atenderEvento(message);
+	    //Encolar evento si no es prioritario
 	}
 
-	private void atenderEvento()
+	private void atenderEvento(String message)
 	{
-		//Atender evento si es prioritario - Enviar correo
-		//Encolar evento si no es prioritario
+		//Enviar correo MailManager class
+		
+		MailManager.generateAndSendEmail(message, "xxxx@uniandes.edu.co", "test");
 	}
 
 	private void encolarEvento()
 	{
-		
+		//Encolar nuevamente
 	}
 
 }

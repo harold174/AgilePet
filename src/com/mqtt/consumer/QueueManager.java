@@ -2,11 +2,12 @@ package com.mqtt.consumer;
 
 import java.io.IOException;
 
+import com.agilepet.localization.LocalizationManager;
 import com.ibm.mq.*;
 
 public class QueueManager {
 
-	private static String hostname = "ec2-52-87-193-30.compute-1.amazonaws.com";
+	private static String hostname = "ec2-54-175-34-223.compute-1.amazonaws.com";
 	private static String channel  = "SYSTEM.DEF.SVRCONN";
 	private static String qManager = "GRUPO8QM";
 	private static String queueName = "LOCALIZACION.QUEUE";
@@ -48,10 +49,12 @@ public class QueueManager {
 			    gmo.matchOptions=MQC.MQMO_NONE;
 			    gmo.waitInterval=MQC.MQEI_UNLIMITED;
 
+			LocalizationManager localizacion = new LocalizationManager();
+			    
 			boolean thereAreMessages=true;
 			while(thereAreMessages){
 		
-				System.out.println(queue.getCurrentDepth());
+				//System.out.println(queue.getCurrentDepth());
 				if(queue.getCurrentDepth()!=0)
 				{
 			        //read the message          
@@ -59,6 +62,7 @@ public class QueueManager {
 			        //print the text            
 			        String msgText = theMessage.readString(theMessage.getMessageLength());
 			        System.out.println("msg text: "+msgText);
+			        localizacion.procesarMensaje(msgText);
 			        gmo.options = MQC.MQGMO_WAIT | MQC.MQGMO_BROWSE_NEXT;
 				}
 			    
