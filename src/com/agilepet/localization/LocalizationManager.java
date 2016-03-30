@@ -10,6 +10,9 @@ import com.agilepet.utils.MailManager;
 public class LocalizationManager {
 
 	//Identificador unico del collar
+	String horaCollar;
+	String horaServerMQTT;
+	String horaEnvioMail;
 	String cliente;
 	String latitud;
 	String longitud;
@@ -28,18 +31,30 @@ public class LocalizationManager {
 		cliente=message.substring(0, 9);
 		latitud=message.substring(10, 27);
 		longitud=message.substring(28, 45);
-		System.out.println(cliente+"*"+latitud+"*"+longitud);
-
+		horaCollar = message.substring(47,message.length());
+		//horaServerMQTT = message.substring(71, 89);
+		
+		
+		float latitudF= Float.parseFloat(latitud);
+		float longitudF=Float.parseFloat(longitud);
+		System.out.println(cliente+"*"+latitudF+"*"+longitudF+"*"+horaCollar);//+"*"+horaServerMQTT);	
+		
+		if (( latitudF<3.58 || latitudF>3.596 )|| (longitudF<-74.082 || longitudF>74.081))
+		{
+			priorizarEvento(message);
+		}
+				
 		//Persistir info
 		persistirInfo(message);
 		//Priorizar evento
 	
-		priorizarEvento(message);
+		
 	}
 
 	private void persistirInfo(String message)
 	{
 		//TODO save message on BD
+		//DBConnection.connect();
 
 	}
 
@@ -55,7 +70,7 @@ public class LocalizationManager {
 	{
 		//Enviar correo MailManager class
 		
-		MailManager.generateAndSendEmail(message, "xxxx@uniandes.edu.co", "test");
+		MailManager.generateAndSendEmail(message, "hl.murcia222@uniandes.edu.co", "test");
 	}
 
 	private void encolarEvento()

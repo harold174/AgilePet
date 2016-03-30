@@ -4,22 +4,22 @@ import java.io.IOException;
 
 import com.agilepet.localization.LocalizationManager;
 import com.ibm.mq.*;
-
+/**
+ * 
+ * @author harold
+ *
+ */
 public class QueueManager {
 
-	private static String hostname = "ec2-54-175-34-223.compute-1.amazonaws.com";
+	private static String hostname = "ec2-52-23-209-135.compute-1.amazonaws.com";
 	private static String channel  = "SYSTEM.DEF.SVRCONN";
 	private static String qManager = "GRUPO8QM";
 	private static String queueName = "LOCALIZACION.QUEUE";
 	private static int port = 1414;
 	private static String user = "Administrator";
-	private static String password = "fk(rqUduNeS";
-	
-	
-
+	private static String password = "Grupo*8";
 	private MQQueueManager qMgr;
 
-	// When the class is called, this initialization is done first.
 
 	public static void main(String[] args) {
 		
@@ -30,9 +30,7 @@ public class QueueManager {
 		MQEnvironment.channel = channel;
 		MQEnvironment.userID = user;
 		MQEnvironment.password = password;
-		
 		MQEnvironment.properties.put(MQC.TRANSPORT_PROPERTY, MQC.TRANSPORT_MQSERIES);
-
 
 		try {
 			//int openOptions = MQC.MQOO_INQUIRE + MQC.MQOO_FAIL_IF_QUIESCING;
@@ -40,7 +38,6 @@ public class QueueManager {
 			MQQueueManager qMgr = new MQQueueManager(qManager);
 			System.out.println("Success Connection");
 			int openOptions = MQC.MQOO_FAIL_IF_QUIESCING | MQC.MQOO_INPUT_SHARED | MQC.MQOO_BROWSE | MQC.MQOO_INQUIRE;  
-
 			MQQueue queue = qMgr.accessQueue(queueName, openOptions);
 
 			MQMessage theMessage    = new MQMessage();
@@ -65,9 +62,7 @@ public class QueueManager {
 			        localizacion.procesarMensaje(msgText);
 			        gmo.options = MQC.MQGMO_WAIT | MQC.MQGMO_BROWSE_NEXT;
 				}
-			    
 			}
-			
 			
 		} catch (MQException e) {
 			if(e.reasonCode == e.MQRC_NO_MSG_AVAILABLE) {
@@ -76,7 +71,5 @@ public class QueueManager {
 		}catch (IOException e) {
 	        System.out.println("ERROR: "+e.getMessage());
 	    }
-
-
 	}
 }

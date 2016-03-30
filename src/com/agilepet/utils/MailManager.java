@@ -13,6 +13,10 @@ import java.util.Properties;
 import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -45,8 +49,20 @@ public class MailManager {
             getMailSession = Session.getDefaultInstance(mailServerProperties, null);
             generateMailMessage = new MimeMessage(getMailSession);
             generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(emailRecipient));
-            generateMailMessage.setSubject(subject);
-            String emailBody = message;
+            generateMailMessage.setSubject("Alerta : Perro fuera de cuadrante");
+            
+            Date todaysDate = new Date();
+    		Long horaMail = todaysDate.getTime();
+    		
+    		Long horaCollar = Long.valueOf(message.substring(47, message.length()));
+    		
+    		Long diferencia = horaMail - horaCollar;
+    		
+    		System.out.println("Collar time: "+ horaCollar);
+    		System.out.println("Mail time: "+ horaMail);
+    		System.out.println("Diferencia: "+ diferencia);
+            
+            String emailBody = message+"="+diferencia;
             generateMailMessage.setContent(emailBody, "text/html");
             System.out.println("Mail Session has been created successfully..");
 
