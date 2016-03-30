@@ -1,5 +1,6 @@
 package com.agilepet.localization;
 
+import com.agilepet.utils.DBConnection;
 import com.agilepet.utils.MailManager;
 
 /**
@@ -29,7 +30,9 @@ public class LocalizationManager {
 	{
 		//Recibir info
 		cliente=message.substring(0, 9);
+		//Eje y; 90 a -90°
 		latitud=message.substring(10, 27);
+		//Eje x; 180 a -180°
 		longitud=message.substring(28, 45);
 		horaCollar = message.substring(47,message.length());
 		//horaServerMQTT = message.substring(71, 89);
