@@ -2,8 +2,10 @@ package com.agilepet.utils;
 import java.sql.DriverManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 /**
  * 
  * @author harold
@@ -11,68 +13,57 @@ import java.sql.Statement;
  */
 public class DBConnection {
 
-
 	// Create a variable for the connection string.
-	static String connectionUrl = "jdbc:sqlserver://localhost:1433;" +
-			"databaseName=model;user=admin;password=340$Uuxwp7Mcxo7Khy";
+	static String dbConnectionUrl = "jdbc:postgresql://agilepetdb.cbi1v6cha2du.us-east-1.rds.amazonaws.com:5432/AgilepetDB";
+	static String dbUser = "agilepet";
+	static String dbPassword = "agilepet";
 
-	// Declare the JDBC objects.
+	//Connection attributes
 	static Connection con = null;
-	//static Statement stmt = null;
 	static ResultSet rs = null;
 
-	public static void main(String[] args) {
-
-
-		System.out.println("-------- PostgreSQL "
-				+ "JDBC Connection Testing ------------");
+	public static ArrayList<String[]> executeQuery(String query) {
 
 		Connection connection = null;
 		Statement st = null;
 		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		ArrayList<String[]> result = new ArrayList<String[]>();
 
 		try {
 
 			Class.forName("org.postgresql.Driver");
-			System.out.println("PostgreSQL JDBC Driver Registered!");
-
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://agilepetdb.cbi1v6cha2du.us-east-1.rds.amazonaws.com:5432/AgilepetDB", "agilepet",
-					"agilepet");
+			connection = DriverManager.getConnection(dbConnectionUrl, dbUser, dbPassword);
 
 			if (connection != null) {
-				System.out.println("You made it, take control your database now!");
-
+				System.out.println("Query: "+query);
 				st = connection.createStatement();
-				rs = st.executeQuery("SELECT * FROM mascota m " +
-						"join zona_segura_mascota z on m.id = z.id_mascota " +
-						"where serial_collar=1080056328 " +
-						"and (3.59 between z.coordenada_x2 and z.coordenada_x1 or 3.59 between z.coordenada_x1 and z.coordenada_x2)" +
-						"and (-74 between coordenada_y1 and coordenada_y2 or -74 between coordenada_y2 and coordenada_y1)");
+				rs = st.executeQuery(query);
+				rsmd = rs.getMetaData();
+				
 				while (rs.next())
 				{
-					System.out.print("Column 1 returned ");
-					System.out.println(rs.getString(2));
+					String[] record = new String[rsmd.getColumnCount()];
+		            for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+		                    record[i-1] = rs.getString(i);
+		            }
+		            result.add(record);
 				} 
 
 			} else {
 				System.out.println("Failed to make connection!");
 			}
 
-
-
 		} catch (ClassNotFoundException e) {
 
 			System.out.println("Where is your PostgreSQL JDBC Driver? "
 					+ "Include in your library path!");
 			e.printStackTrace();
-			return;
 
 		}catch (SQLException e) {
 
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
-			return;
 
 		}finally {
 			if (rs != null) {
@@ -91,14 +82,10 @@ public class DBConnection {
 				} catch (SQLException e) { /* ignored */}
 			}
 		}
-
-
-
-
-
-
+		return result;
 
 	}
+
 }
 
 

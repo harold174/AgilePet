@@ -1,5 +1,7 @@
 package com.agilepet.localization;
 
+import java.util.ArrayList;
+
 import com.agilepet.utils.DBConnection;
 import com.agilepet.utils.MailManager;
 
@@ -11,18 +13,16 @@ import com.agilepet.utils.MailManager;
 public class LocalizationManager {
 
 	//Identificador unico del collar
-	String horaCollar;
-	String horaServerMQTT;
-	String horaEnvioMail;
-	String cliente;
-	String latitud;
-	String longitud;
+	private String horaCollar;
+	private String horaServerMQTT;
+	private String horaEnvioMail;
+	private String cliente;
+	private String latitud;
+	private String longitud;
+	private DBConnection connection;
 
 	public LocalizationManager()
 	{
-
-
-
 
 	}
 
@@ -35,23 +35,12 @@ public class LocalizationManager {
 		//Eje x; 180 a -180°
 		longitud=message.substring(28, 45);
 		horaCollar = message.substring(47,message.length());
-		//horaServerMQTT = message.substring(71, 89);
-		
-		
-		float latitudF= Float.parseFloat(latitud);
-		float longitudF=Float.parseFloat(longitud);
-		System.out.println(cliente+"*"+latitudF+"*"+longitudF+"*"+horaCollar);//+"*"+horaServerMQTT);	
-		
-		if (( latitudF<3.58 || latitudF>3.596 )|| (longitudF<-74.082 || longitudF>74.081))
-		{
-			priorizarEvento(message);
-		}
-				
-		//Persistir info
-		persistirInfo(message);
+
+		System.out.println(cliente+"*"+latitud+"*"+longitud+"*"+horaCollar);	
+
 		//Priorizar evento
-	
-		
+		priorizarEvento(message);
+
 	}
 
 	private void persistirInfo(String message)
@@ -64,16 +53,29 @@ public class LocalizationManager {
 	private void priorizarEvento(String message)
 	{
 		//Revisar si el perro esta perdido
+		String query="select * from mascota m " +
+				"join zona_segura_mascota z on m.id = z.id_mascota " +
+				"where serial_collar="+cliente + " "+
+				"and ("+longitud+" between z.coordenada_x2 and z.coordenada_x1 or "+longitud+" between z.coordenada_x1 and z.coordenada_x2) "+
+				"and ("+latitud+" between coordenada_y1 and coordenada_y2 or "+latitud+" between coordenada_y2 and coordenada_y1)";
+
+		ArrayList<String[]> resultado = DBConnection.executeQuery(query);
+		String[] a =resultado.get(0);
+		System.out.println(a[0]);
+		
 		//Atender evento si es prioritario 
 		atenderEvento(message);
-	    //Encolar evento si no es prioritario
+		//Encolar evento si no es prioritario
 	}
 
 	private void atenderEvento(String message)
 	{
 		//Enviar correo MailManager class
-		
+
 		MailManager.generateAndSendEmail(message, "hl.murcia222@uniandes.edu.co", "test");
+		//Persistir info
+		persistirInfo(message);
+
 	}
 
 	private void encolarEvento()
