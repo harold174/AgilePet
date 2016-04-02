@@ -1,9 +1,11 @@
 package com.mqtt.consumer;
 
 import java.io.IOException;
+import java.util.Date;
 
 import com.agilepet.localization.LocalizationManager;
 import com.ibm.mq.*;
+import com.ibm.security.pkcs7.Data;
 /**
  * 
  * @author harold
@@ -11,7 +13,7 @@ import com.ibm.mq.*;
  */
 public class QueueManager {
 
-	private static String hostname = "ec2-52-91-186-194.compute-1.amazonaws.com";
+	private static String hostname = "ec2-52-87-161-155.compute-1.amazonaws.com";
 	private static String channel  = "SYSTEM.DEF.SVRCONN";
 	private static String qManager = "GRUPO8QM";
 	private static String queueName = "LOCALIZACION.QUEUE";
@@ -59,6 +61,7 @@ public class QueueManager {
 			        //print the text            
 			        String msgText = theMessage.readString(theMessage.getMessageLength());
 			        System.out.println("msg text: "+msgText);
+			        System.out.println("Fecha inicio: "+new Date().getTime());
 			        localizacion.procesarMensaje(msgText);
 			        gmo.options = MQC.MQGMO_WAIT | MQC.MQGMO_BROWSE_NEXT;
 				}
