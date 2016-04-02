@@ -56,16 +56,20 @@ public class LocalizationManager {
 		String query="select * from mascota m " +
 				"join zona_segura_mascota z on m.id = z.id_mascota " +
 				"where serial_collar="+cliente + " "+
-				"and ("+longitud+" between z.coordenada_x2 and z.coordenada_x1 or "+longitud+" between z.coordenada_x1 and z.coordenada_x2) "+
+				"and (to_number('"+longitud+"', 'S99D9999999999999') between z.coordenada_x2 and z.coordenada_x1 or to_number('"+longitud+"', 'S99D9999999999999') between z.coordenada_x1 and z.coordenada_x2) "+
 				"and ("+latitud+" between coordenada_y1 and coordenada_y2 or "+latitud+" between coordenada_y2 and coordenada_y1)";
 
 		ArrayList<String[]> resultado = DBConnection.executeQuery(query);
-		String[] a =resultado.get(0);
-		System.out.println(a[0]);
 		
 		//Atender evento si es prioritario 
-		atenderEvento(message);
-		//Encolar evento si no es prioritario
+		if(resultado.size()>0)
+		{
+			atenderEvento(message);
+		}else{
+			//Encolar evento si no es prioritario
+		}
+		
+		
 	}
 
 	private void atenderEvento(String message)

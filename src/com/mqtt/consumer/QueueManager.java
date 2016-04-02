@@ -11,7 +11,7 @@ import com.ibm.mq.*;
  */
 public class QueueManager {
 
-	private static String hostname = "ec2-52-23-209-135.compute-1.amazonaws.com";
+	private static String hostname = "ec2-52-91-186-194.compute-1.amazonaws.com";
 	private static String channel  = "SYSTEM.DEF.SVRCONN";
 	private static String qManager = "GRUPO8QM";
 	private static String queueName = "LOCALIZACION.QUEUE";

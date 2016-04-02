@@ -72,7 +72,7 @@ public class MailManager {
 
             // Enter your correct gmail UserID and Password (XXXApp Shah@gmail.com)
             transport.connect("smtp.gmail.com", "noreply.dummy10@gmail.com", "atalanta85");
-            transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+            //transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
             transport.close();
             
         } catch (Exception e) {
