@@ -12,11 +12,11 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.io.FileInputStream;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import com.agilepet.utils.Logger;
 
 /**
  *
@@ -51,8 +51,7 @@ public class MailManager {
             generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(emailRecipient));
             generateMailMessage.setSubject("Alerta : Perro fuera de cuadrante");
             
-            Date todaysDate = new Date();
-    		Long horaMail = todaysDate.getTime();
+    		Long horaMail = new Date().getTime();
     		
     		Long horaCollar = Long.valueOf(message.substring(47, message.length()));
     		
@@ -61,6 +60,9 @@ public class MailManager {
     		System.out.println("Collar time: "+ horaCollar);
     		System.out.println("Mail time: "+ horaMail);
     		System.out.println("Diferencia: "+ diferencia);
+    		
+    		//Log data
+    		Logger.logData(diferencia+"");
             
             String emailBody = message+"="+diferencia;
             generateMailMessage.setContent(emailBody, "text/html");
@@ -76,7 +78,7 @@ public class MailManager {
             transport.close();
             
         } catch (Exception e) {
-            Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+            //Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
         }
     }
     
@@ -92,7 +94,7 @@ public class MailManager {
         }
         catch( Exception e )
         {
-                Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
+                //Logger.getGlobal().log(Level.SEVERE, e.getMessage(), e);
         }
 
     }

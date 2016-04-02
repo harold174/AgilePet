@@ -75,11 +75,9 @@ public class LocalizationManager {
 	private void atenderEvento(String message)
 	{
 		//Enviar correo MailManager class
-
 		MailManager.generateAndSendEmail(message, "hl.murcia222@uniandes.edu.co", "test");
 		//Persistir info
 		persistirInfo(message);
-
 	}
 
 	private void encolarEvento()
