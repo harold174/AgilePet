@@ -5,7 +5,6 @@ import java.util.Date;
 
 import com.agilepet.localization.LocalizationManager;
 import com.ibm.mq.*;
-import com.ibm.security.pkcs7.Data;
 /**
  * 
  * @author harold
@@ -13,10 +12,10 @@ import com.ibm.security.pkcs7.Data;
  */
 public class QueueManager {
 
-	private static String hostname = "ec2-52-87-161-155.compute-1.amazonaws.com";
+	private static String hostname = "ec2-52-87-240-191.compute-1.amazonaws.com";
 	private static String channel  = "SYSTEM.DEF.SVRCONN";
-	private static String qManager = "GRUPO8QM";
-	private static String queueName = "LOCALIZACION.QUEUE";
+	private static String qManager = "GRUPO8";
+	private static String queueName = "GUARDAR.QUEUE";
 	private static int port = 1414;
 	private static String user = "Administrator";
 	private static String password = "Grupo*8";
@@ -53,7 +52,7 @@ public class QueueManager {
 			boolean thereAreMessages=true;
 			while(thereAreMessages){
 		
-				//System.out.println(queue.getCurrentDepth());
+				System.out.println(queue.getCurrentDepth());
 				if(queue.getCurrentDepth()!=0)
 				{
 			        //read the message          
@@ -63,13 +62,17 @@ public class QueueManager {
 			        System.out.println("msg text: "+msgText);
 			        System.out.println("Fecha inicio: "+new Date().getTime());
 			        localizacion.procesarMensaje(msgText);
-			        gmo.options = MQC.MQGMO_WAIT | MQC.MQGMO_BROWSE_NEXT;
+			        gmo.options = MQC.MQGMO_MSG_UNDER_CURSOR;
+			        queue.get(theMessage,gmo);
+			        gmo.options = MQC.MQGMO_BROWSE_NEXT + MQC.MQGMO_NO_WAIT + MQC.MQGMO_FAIL_IF_QUIESCING + MQC.MQGMO_ACCEPT_TRUNCATED_MSG; 
 				}
 			}
 			
 		} catch (MQException e) {
 			if(e.reasonCode == e.MQRC_NO_MSG_AVAILABLE) {
 	            System.out.println("no more message available or retrived");
+	        }else if(e.reasonCode == e.MQRC_NO_MSG_UNDER_CURSOR){
+	        	System.out.println("no more message under cursor");
 	        }
 		}catch (IOException e) {
 	        System.out.println("ERROR: "+e.getMessage());
