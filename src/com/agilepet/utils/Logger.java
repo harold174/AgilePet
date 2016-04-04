@@ -17,7 +17,7 @@ public static void logData(String data){
 	  BufferedWriter writer = null;
       try {
           //create a temporary file
-          File logFile = new File("./data/results.txt");
+          File logFile = new File("C:/Users/Administrator/Desktop/data/results.txt");
 
           // This will output the full path where the file will be written to...
           System.out.println(logFile.getCanonicalPath());

@@ -12,10 +12,10 @@ import com.ibm.mq.*;
  */
 public class QueueManager {
 
-	private static String hostname = "ec2-52-87-240-191.compute-1.amazonaws.com";
+	private static String hostname = "ec2-52-87-245-160.compute-1.amazonaws.com";
 	private static String channel  = "SYSTEM.DEF.SVRCONN";
 	private static String qManager = "GRUPO8";
-	private static String queueName = "GUARDAR.QUEUE";
+	private static String queueName = "";
 	private static int port = 1414;
 	private static String user = "Administrator";
 	private static String password = "Grupo*8";
@@ -23,7 +23,8 @@ public class QueueManager {
 
 
 	public static void main(String[] args) {
-		
+		System.out.println(args[0]);
+		queueName=args[0];
 		System.out.println("Begin connection...");
 		System.out.println("Set settings...");
 		MQEnvironment.hostname = hostname;
@@ -43,7 +44,7 @@ public class QueueManager {
 
 			MQMessage theMessage    = new MQMessage();
 			MQGetMessageOptions gmo = new MQGetMessageOptions();
-			    gmo.options=MQC.MQGMO_WAIT | MQC.MQGMO_BROWSE_FIRST;
+			    gmo.options=MQC.MQGMO_WAIT | MQC.MQGMO_BROWSE_FIRST + MQC.MQGMO_LOCK;
 			    gmo.matchOptions=MQC.MQMO_NONE;
 			    gmo.waitInterval=MQC.MQEI_UNLIMITED;
 
@@ -52,9 +53,10 @@ public class QueueManager {
 			boolean thereAreMessages=true;
 			while(thereAreMessages){
 		
-				System.out.println(queue.getCurrentDepth());
+				
 				if(queue.getCurrentDepth()!=0)
 				{
+					System.out.println(queue.getCurrentDepth());
 			        //read the message          
 			        queue.get(theMessage,gmo);  
 			        //print the text            
@@ -64,7 +66,7 @@ public class QueueManager {
 			        localizacion.procesarMensaje(msgText);
 			        gmo.options = MQC.MQGMO_MSG_UNDER_CURSOR;
 			        queue.get(theMessage,gmo);
-			        gmo.options = MQC.MQGMO_BROWSE_NEXT + MQC.MQGMO_NO_WAIT + MQC.MQGMO_FAIL_IF_QUIESCING + MQC.MQGMO_ACCEPT_TRUNCATED_MSG; 
+			        gmo.options = MQC.MQGMO_BROWSE_NEXT + MQC.MQGMO_LOCK + MQC.MQGMO_NO_WAIT + MQC.MQGMO_FAIL_IF_QUIESCING + MQC.MQGMO_ACCEPT_TRUNCATED_MSG; 
 				}
 			}
 			
